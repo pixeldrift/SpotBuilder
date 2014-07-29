@@ -1,0 +1,342 @@
+
+<html>
+	<head>
+		<title>Spot Builder</title>
+		<meta http-equiv="Content-Script-Type" content="text/javascript">
+		<link rel="stylesheet" type="text/css" href="style.css">
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+		
+
+		<script type="text/javascript">
+		
+			function addItem(itemType) {
+
+				// Why doesn't this line work?
+				var itemNumber = $(".spotItems li").size()+1;
+
+				if (itemType == "image") {
+					target = "#imageItemTemplate";
+				} else {
+					target = "#textItemTemplate";
+				}
+				var object = $(target).tmpl().appendTo(".spotItems");
+				object.show("drop", 600, function() { scrollToBottom(600); });
+			}
+
+			function deleteItem(object) {
+				if ( confirm('Delete this item?') ) {
+					target = $(object).closest('li');
+					$(target).slideUp(600, function() {$(target).remove();} );				    					
+				}
+			}
+			
+			function chooseImage() {
+				$('#imagePickerBox').show();
+
+				// This should return the currently active item in the picker.
+				// Current functionality does not destroy and recreate the box.
+				// This has the handy side effect of keeping your recent selection.
+
+				// The contents of the picker should use a template applied to
+				// an automatically generated list of the folder contents.
+			}
+
+			function buildSpot() {
+				if ( confirm('Ready to build this spot?') ) {
+					$(document).on('click', object, function() {
+    					// Here is where we will generate the data file used by the After Effects Script.
+    					// Insert text dump of the form fields, either save to file or send as email.
+					});
+				}
+			}
+
+			function closeImagePickerBox (invoking) {
+				$('.imagePickerBox').slideUp();
+				// Change this behavior depending on if the picker is canceled or accepted.
+				// If canceled, window should just go away. If an image is selected,
+				// the window can fade away while the selected image  animates to the
+				// position of the thumbnail preview of the invoking item.
+			}
+
+			function scrollToBottom() {
+				$('html, body').animate( {scrollTop: $(document).height()}, 1000, "swing");
+			}
+
+			// Is this the best way to add behavior to an object?
+			$(function() {
+    			$( "#imagePickerTitleBar" ).parent().draggable();
+  			});
+
+			// This controls the tabs in the image picker
+			$(document).ready(function() {
+			    $('.tabs .tab-links a').on('click', function(e)  {
+			        e.preventDefault();
+			        var currentAttrValue = $(this).attr('href');
+			 
+			        // Show current tab content and hide the rest
+			        $('.tabs ' + currentAttrValue).show().siblings().hide();
+			 
+			        // Set or remove the active style from the selected tab
+			        $(this).parent('li').addClass('active').siblings().removeClass('active');
+			    });
+			});
+
+			// This is for the image picker to highlight the current selection.
+			$(function() {
+				// Am I using e correctly?
+				var $thumbs = $('.thumbnail').click(function(e) {
+					e.preventDefault();
+					// Run removeClass on every element
+					$thumbs.removeClass(highlighted);
+					// Add the class to the currently clicked element
+					$(this).addClass(highlighted);
+				});
+				$('.thumbnail').dblclick(function(e) {
+					e.preventDefault();
+					closeImagePickerBox();
+				});
+  			});
+
+			$(window).on('beforeunload', function(e) {
+				// Is this better form than specifically calling for a dialog box?
+				return "This spot is not built yet. Your selections will be lost.";
+			});
+			
+			
+
+		</script>
+
+		<script type="text/javascript">
+	
+		</script>
+
+
+		<script id="textItemTemplate" type="text/x-jQuery-tmpl">
+			<li id="spotItem_${itemNumber}" class="textGroup">	
+				<div class="optionsGroup">
+					<h2>Item ${itemNumber}</h2>
+					<b>Text Super: </b><br>
+					<input type="text" name="itemText" size="24" value="Save BIG!"><br>
+					
+					<br><br>
+					<center><a id="deleteItemButton" class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
+				</div>
+
+				<div class="optionsGroup">
+					<b>Text Position: </b><br>
+					<input type="radio" name="textPlacement" value="top"> Top<br>
+					<input type="radio" name="textPlacement" value="center"> Center<br>
+					<input type="radio" name="textPlacement" value="bottom"> Bottom<br>
+
+					<br>
+
+					<b>Text Color: </b><br>
+					<input type="radio" name="textColor" value="yellow"> <span class="colorBox" style="background-color: yellow;"></span><br>
+					<input type="radio" name="textColor" value="white"> <span class="colorBox" style="background-color: white;"></span><br>
+					<input type="radio" name="textColor" value="red"> <span class="colorBox" style="background-color: red;"></span>
+
+				</div>
+
+				<div class="optionsGroup">
+					<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
+					<br>
+					<select name="inTransition">
+						<option value="none">Choose Transition In:</option>
+						<option value="fade">Fade In </option>
+						<option value="flyLeft">Fly from Left &gt;</option>
+						<option value="flyRight">Fly from Right &lt;</option>
+						<option value="flyTop">Fly from Top v</option>
+						<option value="flyTop">Fly from Bottom ^</option>
+						<option value="scaleUp">Grow Out</option>
+					</select>
+					<br><br>
+					<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
+					<br>
+					<select name="outTransition">
+						<option value="none">Choose Transition Out:</option>
+						<option value="fade">Fade Out</option>
+						<option value="flyLeft">Fly to Left &gt;</option>
+						<option value="flyRight">Fly to Right &lt;</option>
+						<option value="flyTop">Fly to Top v</option>
+						<option value="flyTop">Fly to Bottom ^</option>
+						<option value="scaleUp">Shrink Down</option>
+					</select>
+					<br><br>
+					<b>Bouncey Motion: </b><input type="checkbox" name="bounce" value="true" checked="checked">
+					<br>
+					<b>Glow: </b><input type="checkbox" name="glow"><br>
+					<b>Shadow: </b><input type="checkbox" name="shadow" checked="checked"><br>
+				</div>
+			</li>
+		</script>
+
+
+		<script id="imageItemTemplate" type="text/x-jQuery-tmpl">
+			<li id="spotItem_${itemNumber}" class="imageGroup">
+				
+				<div class="optionsGroup">
+					<h2>Item ${itemNumber}</h2>
+
+					<a class="greenButton" name="chooseImage" onClick="chooseImage()">Choose Image</a>
+					<br><br>
+					<center><a class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
+				</div>
+				<div class="optionsGroup">
+					<b>Image Preview: </b><br>
+					<div class="thumbnail"></div><br>
+				</div>
+
+				<div class="optionsGroup">
+					<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
+					<br><br>
+					<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
+					<br><br>
+					<select name="imageMotion">
+						<option value="none">Choose Image Motion:</option>
+						<option value="scaleUp">Slow Zoom In +</option>
+						<option value="scaleUp">Slow Zoom Out -</option>
+						<option value="panLeft">Pan Left &gt;</option>
+						<option value="panRight">Pan Right &lt;</option>
+						<option value="panDown">Pan Down v</option>
+						<option value="panUp">Pan Up ^</option>
+					</select>
+				</div>
+			</li>
+		</script>
+
+	</head>
+
+	<body>
+		<h1>Spot Builder (v0.1)</h1>
+		<p class="note">[ 6/28/14 ] - <a href="mailto:nathan@pizar.net">Nathan D. B. Pizar</a> - <a href="http://www.gpmarketinginc.com">Gremillion & Pou</a></p>
+		<p>Use this tool to generate the basic structure of your commercial. Specify the content and options you'd like.</p>
+		
+		<form>
+
+			<table class="mainOptions">
+				<tr>
+					<td><b>Spot Type: </b></td>
+					<td>
+						<input type="radio" id="splashLogoButton" name="spotType" value="splash" checked="checked">
+						<img src="images/SplashLogo.gif">
+					</td>
+					<td>
+							
+						<input type="radio" id="artesianLogoButton" name="spotType" value="artesian">
+						<img src="images/ArtesianLogo.gif">			
+					</td>
+				</tr>
+				<tr>
+					<td><b>Spot #/Title: </b></td>
+					<td><input type="text" name="jobNumber" size="15" value="SSH-1234"></td>
+					<td><input type="text" name="spotTitle" size="30" value="In Ground Summer Sale"></td>
+				</tr>
+				<tr>
+					<td><b>Voiceover: </b></td>
+					<td colspan="2"><input type="file" name="uploadVoiceover" value="Select MP3"></td>
+				</tr>
+
+				<tr>
+					<td><b>Spot Length: </b></td>
+					<td><input type="radio" name="spotLength" value="30"> 30 seconds</td>
+					<td><input type="radio" name="spotLength" value="15"> 15 seconds</td>
+				</tr>
+					
+					<td><b>Intro Type: </b></td>
+					<td><input type="radio" name="introType" value="logo" checked="checked"> Brand Logo</td>
+					<td><input type="radio" name="introType" value="red"> Red Screen</td>
+				</tr>
+				<tr>
+					<td><b>Ending Type: </b></td>
+					<td><input type="radio" name="endingType" value="photostrip" checked="checked"> Photostrip with Logo<br>
+					<td><input type="radio" name="endingType" value="3dlogo"> 3D Brand Logo</td>
+				</tr>		
+			</table>
+			<hr>
+
+				<ul class="spotItems">
+
+					
+				</ul>
+
+			</ul>
+		</form>
+
+			<a id="addImageButton" class="greenButton" onclick="addItem('image')">+ Add Image</a> <a id="addItemButton" class="greenButton" onclick="addItem('text')">+ Add Text</a> <a id="buildSpotButton" class="redButton" onclick="buildSpot()">* Build Spot!</a>
+
+
+			<div id="imagePickerBox" class="imagePickerBox">
+				<h2 id="imagePickerTitleBar">Select Image or Video <a href="#" id="closeImagePickerButton" class="closeWindowButton" onclick="closeImagePickerBox()">x</a></h2>
+				<div class="tabs">
+				    <ul class="tab-links">
+				        <li class="active"><a href="#tab1">In Ground</a></li>
+				        <li><a href="#tab2">Above Ground</a></li>
+				        <li><a href="#tab3">Spas</a></li>
+				        <li><a href="#tab4">Patio</a></li>
+				    </ul>
+				 
+				    <div class="tab-content">
+				        <div id="tab1" class="tab active">
+							<ul>
+								<li class="thumbnail highlighted"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					        </ul>
+				        </div>
+				 
+				        <div id="tab2" class="tab">
+				        	<ul>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					           	<li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					           	<li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					        </ul>
+				        </div>
+				 
+				        <div id="tab3" class="tab">
+				        	<ul>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					        </ul>
+				        </div>
+				 
+				        <div id="tab4" class="tab">
+				        	<ul>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
+					        </ul>
+				        </div>
+
+				    </div>
+				</div>
+				<p class="note">(Shortcut: You can double-click an image to choose it.)</p>
+				<center><a href="#" id="useImage" class="greenButton" onclick="closeImagePickerBox()">Use This Image</a><a href="#" id="cancelButton" class="redButton" onclick="closeImagePickerBox()">Cancel</a></center><br>
+				
+			</div>
+
+	</body>
+</html>

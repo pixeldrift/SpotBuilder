@@ -1,0 +1,289 @@
+<style>
+	html {
+		background-color: white;
+	}
+	body {
+		font-family: 'Trebuchet MS', Helvetica, Arial, Sans-Serif;
+		background-color: whitesmoke;
+		border: 3px solid gray;
+		margin: 30px;
+		width: 540px;
+		padding: 20px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	h1 {
+		text-transform: uppercase;
+	}
+	p {
+		text-indent: 20px;
+		font-style: italic;
+		margin: 20px;
+	}
+	.note {
+		font-size: 12px;
+		color: gray;
+		font-style: italic;
+		text-indent: 0;
+		text-align: center;
+	}
+	.note a {
+		color: gray;
+	}
+	.mainOptions {
+		border: 2px solid gray;
+		background-color: lightgray;
+		width: 535px;
+		margin: 20px 0 20px 0;				
+		padding: 15px;
+		border-radius: 10px;  
+	}
+	ul.spotItems {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.spotItems li {
+		margin: 20px 0 20px 0;				
+		padding: 15px;
+		width: 500px;
+		height: 240px;
+		display: none;
+		border-radius: 10px;  
+	}
+	.spotItems li.imageGroup {
+		border: 2px solid skyblue;
+		background: aliceblue;
+	}
+
+	.spotItems li.textGroup {
+		border: 2px solid sandybrown;
+		background: papayawhip ;
+	}
+
+	.spotItems li h2 {
+		margin: 0 0 10px 0;
+		border-bottom: 2px solid #808080;
+	}
+	
+	.spotItems .itemName {	
+	}
+	
+	.spotItems .handle {
+		margin-left: 10px;
+		cursor: move;
+	}
+	.optionsGroup {
+		display: block;
+		float: left;
+		border: 1px dashed lightgray;
+		height: 220px;
+		padding: 10px;
+	}
+	input[type="text"] {
+	}
+	input[type='radio'] {
+	}
+/*
+	.brandSelector input {
+	    margin:0;
+	    padding:0;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	    appearance: none;
+	}
+	.splashLogoButton {
+		background_image: url("images/SplashLogo.gif");
+	}
+	.artesianLogoButton {
+		background_image: url("images/ArtesianLogo.gif");
+	}
+	.brandSelector input:active +.brandLogo {
+		opacity: .9;
+	}
+	
+	.brandSelector input:checked +.brandLogo {
+	   -webkit-filter: none;
+		  -moz-filter: none;
+		  	   filter: none;
+	}
+
+	.brandLogo {
+	    cursor:pointer;
+	    background-size: contain;
+	    background-repeat: no-repeat;
+	    display: inline-block;
+	    width:  100px;
+	    height: 40px;
+	    -webkit-transition: all 100ms ease-in;
+	       -moz-transition: all 100ms ease-in;
+	            transition: all 100ms ease-in;
+	    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+	       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+	            filter: brightness(1.8) grayscale(1) opacity(.7);
+	}
+	.brandLogo:hover{
+	    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+	       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+	            filter: brightness(1.2) grayscale(.5) opacity(.9);
+	}
+	*/
+	.colorBox {
+		display: inline-block;
+		border: 1px solid gray;
+		margin: 2px;
+		height: 16px;
+		width: 20px;
+		vertical-align: middle;
+	}
+	.redButton {
+		width: 100px;
+		display: inline-block;
+		background-color: pink;
+		color: red;
+		border: 2px solid red;
+		text-decoration: none;
+		font-size: 14px;
+		text-align: center;
+		padding: 10px;
+		margin: 10px;
+		border-radius: 20px;
+	}
+	.greenButton {
+		display: inline-block;
+		width: 100px;
+		background-color: lightgreen;
+		color: green;
+		border: 2px solid green;
+		text-decoration: none;
+		font-size: 14px;
+		text-align: center;
+		padding: 10px;
+		margin: 10px;
+		border-radius: 20px;
+	}
+	#buildSpotButton {
+		text-transform: uppercase;
+		font-weight: bold;
+		float: right;
+	}
+	.imagePickerBox {
+		display: none;
+		position: fixed;
+		top: 50px;
+		margin-right: auto;
+		margin-left: auto;
+		background-color: white;
+		z-index: 2;
+		width: 600px;
+		border: 2px solid gray;
+		-moz-box-shadow:    5px 5px 20px 5px rgba(0, 0, 0, 0.25);
+		-webkit-box-shadow: 5px 5px 20px 5px rgba(0, 0, 0, 0.25);
+		box-shadow:         5px 5px 20px 5px rgba(0, 0, 0, 0.25);
+		border-radius: 10px;  
+	}
+	#imagePickerTitleBar {
+		margin: 0;
+		border-bottom: 2px solid gray;
+		display: block;
+		width: 580px;
+		background-color: lightgray;
+		padding: 10px;
+		border-radius: 10px 10px 0 0;  
+	}
+	.closeWindowButton {
+		display: block;
+		border: 2px solid red;
+		background-color: pink;
+		color: red;
+		float: right;
+		font-size: 14px;
+		height: 20px;
+		width: 20px;
+		vertical-align: middle;
+		text-align: center;
+		text-decoration: none;
+		border-radius: 10px;
+	}
+	.thumbnail {
+		list-style: none;
+		display: inline-block;
+		height: 100px;
+		width: 100px;
+		border: 1px solid gray;
+		background-color: lightgray;
+		margin: 5px;
+	}
+	.thumbnail img {
+		position: relative;
+		border: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		margin: auto;
+	}
+	.highlighted {
+		border: 4px solid green;
+		margin: 2px;
+	}
+	
+
+	/*----- Tabs -----*/
+	
+	 
+    /*----- Tab Links -----*/
+    /* Clearfix */
+    .tab-links:after {
+        display: block;
+        clear: both;
+        content:'';
+        margin: 0;
+    }
+    .tab-links li {
+        margin: 0px 5px;
+        float: left;
+        list-style: none;
+
+    }
+ 
+    .tab-links a {
+    	display: inline-block;
+        padding: 5px 10px;
+        background: lightgray;
+        text-decoration: none
+        font-size: 16px;
+        color: gray;
+        text-decoration: none;
+        border-radius: 5px 5px 0 0;          
+    	border: 2px solid gray;
+    	transition: all linear 0.2s;
+    }
+
+    .tab-links a:hover {
+        background: lightgray;
+    }
+ 
+    li.active a, li.active a:hover {
+        background: white;
+        color: black;
+        border-bottom: 2px solid white;
+        padding-bottom: 5px;
+    }
+ 
+    /*----- Content of Tabs -----*/
+    .tab-content {
+    	margin: 0 20px 20px 20px;
+        padding: 20px;
+        border: 2px solid gray;
+    	margin-top: -18px;
+    }
+ 
+    .tab {
+        display: none;
+    }
+
+    .tab.active {
+        display: block;
+    }
+</style>
