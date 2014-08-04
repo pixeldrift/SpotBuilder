@@ -234,47 +234,67 @@
 	</script>
 	
 	<script type="text/javascript">
-			var sliderSlow = 600;
-			var sliderReallySlow = 1000;
-			var thumbnailSelector = '.thumbnail';
-			var imagePickerTabsSelector = '.tabs .tab-links a';
+			var sliderSlow = 600,
+			    sliderReallySlow = 1000,
+			    thumbnailSelector = '.thumbnail',
+			    imagePickerTabsSelector = '.tabs .tab-links a',
+			    useImageTemplate = 'imageItem',
+			    useImageTemplateSelector = '#imageItemTemplate',
+			    useTextTemplate = 'textItem',
+			    useTextTemplateSelector = '#textItemTemplate',
+			    imagePickerBox = '#imagePickerBox',
+				highlightedClassSelector = 'highlighted';
 			
-			function addItem(itemType) {
-
+			function precacheTemplates(){
+				$.template(useTextTemplate,$(useTextTemplateSelector));
+				$.template(useImageTemplate,$(useImageTemplateSelector));
+			}
+			
+			/// <summary>
+			/// This method is used to add items into the spotItems list using one of the two templates
+			/// </summary>
+			/// <param name="useItemTemplate">Pass in one of the items like useTextTemplate or useImageTemplate to use the precached templates</param>
+			function addItem(useItemTemplate) {
 				// Why doesn't this line work? -- size was deprecated, for starters
 				var itemNumber = ($(".spotItems li").length)+1;
-
-				if (itemType == "image") {
-					target = "#imageItemTemplate";
-				} else {
-					target = "#textItemTemplate";
-				}
 				
 				// what are you trying to capture here?
-				var object = $(target).tmpl().appendTo(".spotItems");
+				var object = $.tmpl(useItemTemplate).appendTo(".spotItems");
 				
 				//reversed the options on show, removed the function wrapper since the declaration doesn't take any args
 				object.show(sliderSlow, "drop", scrollToBottom);
+				
+				//set the page status to dirty so we prompt to save if they leave.
+				dirtyData();
 			}
 
+			/// <summary>
+			/// Delete the item, after displaying a confirmation dialog to ensure we delete only when we want to
+			/// </summary>
+			/// <param name="object">The object clicked on within the parent intended to be deleted</param>
 			function deleteItem(object) {
 				if ( confirm('Delete this item?') ) {
-					target = $(object).closest('li');
-					$(target).slideUp(sliderSlow, function() {$(target).remove();} );				    					
+					var target = $(object).closest('li'); //get the parent object that we're going to remove.
+					target.slideUp(sliderSlow, target.remove);
 				}
 			}
-			
+
+			/// <summary>
+			/// This should return the currently active item in the picker.
+			/// Current functionality does not destroy and recreate the box.
+			/// This has the handy side effect of keeping your recent selection.
+			///
+			/// The contents of the picker should use a template applied to
+			/// an automatically generated list of the folder contents.
+			/// </summary>
 			function chooseImage() {
-				$('#imagePickerBox').show();
-
-				// This should return the currently active item in the picker.
-				// Current functionality does not destroy and recreate the box.
-				// This has the handy side effect of keeping your recent selection.
-
-				// The contents of the picker should use a template applied to
-				// an automatically generated list of the folder contents.
+				$(imagePickerBox).show();
 			}
 
+			/// <summary>
+			/// This is where we build the final object and then the form is "clean" again.
+			/// </summary>
+			/// <param name=""></param>
 			function buildSpot() {
 				if ( confirm('Ready to build this spot?') ) {
 					// what is "object" below. It's not defined anywhere else.
@@ -282,32 +302,54 @@
     					// Here is where we will generate the data file used by the After Effects Script.
     					// Insert text dump of the form fields, either save to file or send as email.
 					});
+					
+					// set the page status to clean so we don't prompt to save if we leave.
+					cleanData();
 				}
 			}
 
+			/// <summary>
+			/// Change this behavior depending on if the picker is canceled or accepted.
+			/// If canceled, window should just go away. If an image is selected,
+			/// the window can fade away while the selected image  animates to the
+			/// position of the thumbnail preview of the invoking item.
+			/// </summary>
+			/// <param name="invoking">the object that invoked this method</param>
 			function closeImagePickerBox (invoking) {
-				$('.imagePickerBox').slideUp();
-				// Change this behavior depending on if the picker is canceled or accepted.
-				// If canceled, window should just go away. If an image is selected,
-				// the window can fade away while the selected image  animates to the
-				// position of the thumbnail preview of the invoking item.
+				$(invoking).slideUp();
 			}
-			
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
 			function thumbnailClick(e){
-				// Am I using e correctly?
-				e.preventDefault();
+				e = e || window.event; e.preventDefault();
+				
 				// Run removeClass on every element
-				$(thumbnailSelector).removeClass(highlighted);
+				$(thumbnailSelector).removeClass(highlightedClassSelector);
+				
 				// Add the class to the currently clicked element
-				$(this).addClass(highlighted);
+				$(this).addClass(highlightedClassSelector);
 			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
 			function thumbnailDblClick(e){
-				e.preventDefault();
+				e = e || window.event; e.preventDefault();
+				
 				closeImagePickerBox();
 			}
-			
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
 			function imagePickerTabsClick(e){
-				e.preventDefault();
+				e = e || window.event; e.preventDefault();
+				
 				var currentAttrValue = $(this).attr('href');
 		 
 				// Show current tab content and hide the rest
@@ -316,12 +358,53 @@
 				// Set or remove the active style from the selected tab
 				$(this).parent('li').addClass('active').siblings().removeClass('active');
 			}
-			
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
 			function scrollToBottom() {
 				$('html, body').animate( {scrollTop: $(document).height()}, sliderReallySlow, "swing");
 			}
+			
+			/// <summary>
+			/// Generate the message to display "are you sure you want to leave now"
+			/// </summary>
+			/// <param name="e">Event object</param>
+			function confirmOnPageExit(e) {
+				// If we haven't been passed some event object get the window.event
+				e = e || window.event;
 
+				var message = 'This spot is not built yet. Your selections will be lost.';
+
+				// For IE6-8 and Firefox prior to version 4
+				if (e) e.returnValue = message;
+
+				// For Chrome, Safari, IE8+ and Opera 12+
+				return message;
+			};
+
+			/// <summary>
+			/// Handle window unloading when dirty to ensure we have offered them the option to save their spot
+			/// </summary>
+			function dirtyData(){
+				// Turn it on - assign the function that returns the string
+				window.onbeforeunload = confirmOnPageExit;
+			}
+
+			/// <summary>
+			/// don't show them the window message if they haven't done anything to dirty the page
+			/// </summary>
+			function cleanData(){
+				// Turn it off - remove the function entirely
+				window.onbeforeunload = null;
+			}
+
+			/// <summary>
+			/// page start routine. This should be at the end.
+			/// </summary>
 			$(function() {
+				precacheTemplates();
 				// Is this the best way to add behavior to an object?
 				// cb - this is fine
     			$( "#imagePickerTitleBar" ).parent().draggable();
@@ -331,12 +414,6 @@
 				           .on('click', thumbnailSelector, thumbnailClick)
 				           .on('dblclick', thumbnailSelector, thumbnailDblClick);
   			});
-
-			$(window).on('beforeunload', function(e) {
-				// Is this better form than specifically calling for a dialog box?
-				return "This spot is not built yet. Your selections will be lost.";
-			});
-			
 		</script>
 
 		<script type="text/javascript">
