@@ -294,7 +294,7 @@
   			});
 
 			// This controls the tabs in the image picker
-			$(document).ready(function() {
+			$(function() {
 			    $('.tabs .tab-links a').on('click', function(e)  {
 			        e.preventDefault();
 			        var currentAttrValue = $(this).attr('href');
@@ -305,10 +305,8 @@
 			        // Set or remove the active style from the selected tab
 			        $(this).parent('li').addClass('active').siblings().removeClass('active');
 			    });
-			});
 
-			// This is for the image picker to highlight the current selection.
-			$(function() {
+				// This is for the image picker to highlight the current selection.
 				// Am I using e correctly?
 				var $thumbs = $('.thumbnail').click(function(e) {
 					e.preventDefault();
@@ -317,6 +315,7 @@
 					// Add the class to the currently clicked element
 					$(this).addClass(highlighted);
 				});
+				
 				$('.thumbnail').dblclick(function(e) {
 					e.preventDefault();
 					closeImagePickerBox();
@@ -328,8 +327,6 @@
 				return "This spot is not built yet. Your selections will be lost.";
 			});
 			
-			
-
 		</script>
 
 		<script type="text/javascript">
