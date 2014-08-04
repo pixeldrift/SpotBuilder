@@ -236,6 +236,9 @@
 	<script type="text/javascript">
 			var sliderSlow = 600;
 			var sliderReallySlow = 1000;
+			var thumbnailSelector = '.thumbnail';
+			var imagePickerTabsSelector = '.tabs .tab-links a';
+			
 			function addItem(itemType) {
 
 				// Why doesn't this line work? -- size was deprecated, for starters
@@ -289,7 +292,7 @@
 				// the window can fade away while the selected image  animates to the
 				// position of the thumbnail preview of the invoking item.
 			}
-			var thumbnailSelector = '.thumbnail';
+			
 			function thumbnailClick(e){
 				// Am I using e correctly?
 				e.preventDefault();
@@ -303,7 +306,6 @@
 				closeImagePickerBox();
 			}
 			
-			var imagePickerTabsSelector = '.tabs .tab-links a';
 			function imagePickerTabsClick(e){
 				e.preventDefault();
 				var currentAttrValue = $(this).attr('href');
@@ -324,13 +326,10 @@
 				// cb - this is fine
     			$( "#imagePickerTitleBar" ).parent().draggable();
 
-				// This controls the tabs in the image picker
-			    $(document).on('click', imagePickerTabsSelector, imagePickerTabsClick);
-
-				// This is for the image picker to highlight the current selection.
-				$(document).on('click', thumbnailSelector, thumbnailClick);
-				
-				$(document).on('dblclick', thumbnailSelector, thumbnailDblClick);
+				// by using the $(document).on( syntax we can add elements dynamically and have them also be affected by the click event like we intend
+			    $(document).on('click', imagePickerTabsSelector, imagePickerTabsClick)
+				           .on('click', thumbnailSelector, thumbnailClick)
+				           .on('dblclick', thumbnailSelector, thumbnailDblClick);
   			});
 
 			$(window).on('beforeunload', function(e) {
