@@ -234,10 +234,11 @@
 	</script>
 	
 	<script type="text/javascript">
-		
+			var sliderSlow = 600;
+			var sliderReallySlow = 1000;
 			function addItem(itemType) {
 
-				// Why doesn't this line work?
+				// Why doesn't this line work? -- size was deprecated, for starters
 				var itemNumber = ($(".spotItems li").length)+1;
 
 				if (itemType == "image") {
@@ -245,14 +246,18 @@
 				} else {
 					target = "#textItemTemplate";
 				}
+				
+				// what are you trying to capture here?
 				var object = $(target).tmpl().appendTo(".spotItems");
-				object.show("drop", 600, function() { scrollToBottom(600); });
+				
+				//reversed the options on show, removed the function wrapper since the declaration doesn't take any args
+				object.show(sliderSlow, "drop", scrollToBottom);
 			}
 
 			function deleteItem(object) {
 				if ( confirm('Delete this item?') ) {
 					target = $(object).closest('li');
-					$(target).slideUp(600, function() {$(target).remove();} );				    					
+					$(target).slideUp(sliderSlow, function() {$(target).remove();} );				    					
 				}
 			}
 			
@@ -269,6 +274,7 @@
 
 			function buildSpot() {
 				if ( confirm('Ready to build this spot?') ) {
+					// what is "object" below. It's not defined anywhere else.
 					$(document).on('click', object, function() {
     					// Here is where we will generate the data file used by the After Effects Script.
     					// Insert text dump of the form fields, either save to file or send as email.
@@ -310,7 +316,7 @@
 			}
 			
 			function scrollToBottom() {
-				$('html, body').animate( {scrollTop: $(document).height()}, 1000, "swing");
+				$('html, body').animate( {scrollTop: $(document).height()}, sliderReallySlow, "swing");
 			}
 
 			$(function() {
