@@ -238,7 +238,7 @@
 			function addItem(itemType) {
 
 				// Why doesn't this line work?
-				var itemNumber = $(".spotItems li").size()+1;
+				var itemNumber = ($(".spotItems li").length)+1;
 
 				if (itemType == "image") {
 					target = "#imageItemTemplate";
@@ -292,34 +292,39 @@
 				// Add the class to the currently clicked element
 				$(this).addClass(highlighted);
 			}
-
+			function thumbnailDblClick(e){
+				e.preventDefault();
+				closeImagePickerBox();
+			}
+			
+			var imagePickerTabsSelector = '.tabs .tab-links a';
+			function imagePickerTabsClick(e){
+				e.preventDefault();
+				var currentAttrValue = $(this).attr('href');
+		 
+				// Show current tab content and hide the rest
+				$('.tabs ' + currentAttrValue).show().siblings().hide();
+		 
+				// Set or remove the active style from the selected tab
+				$(this).parent('li').addClass('active').siblings().removeClass('active');
+			}
+			
 			function scrollToBottom() {
 				$('html, body').animate( {scrollTop: $(document).height()}, 1000, "swing");
 			}
 
-			// Is this the best way to add behavior to an object?
 			$(function() {
+				// Is this the best way to add behavior to an object?
+				// cb - this is fine
     			$( "#imagePickerTitleBar" ).parent().draggable();
 
 				// This controls the tabs in the image picker
-			    $('.tabs .tab-links a').on('click', function(e)  {
-			        e.preventDefault();
-			        var currentAttrValue = $(this).attr('href');
-			 
-			        // Show current tab content and hide the rest
-			        $('.tabs ' + currentAttrValue).show().siblings().hide();
-			 
-			        // Set or remove the active style from the selected tab
-			        $(this).parent('li').addClass('active').siblings().removeClass('active');
-			    });
+			    $(document).on('click', imagePickerTabsSelector, imagePickerTabsClick);
 
 				// This is for the image picker to highlight the current selection.
-				$(document).on('click',thumbnailSelector,thumbnailClick);
+				$(document).on('click', thumbnailSelector, thumbnailClick);
 				
-				$('.thumbnail').dblclick(function(e) {
-					e.preventDefault();
-					closeImagePickerBox();
-				});
+				$(document).on('dblclick', thumbnailSelector, thumbnailDblClick);
   			});
 
 			$(window).on('beforeunload', function(e) {
