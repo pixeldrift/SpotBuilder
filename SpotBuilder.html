@@ -283,6 +283,15 @@
 				// the window can fade away while the selected image  animates to the
 				// position of the thumbnail preview of the invoking item.
 			}
+			var thumbnailSelector = '.thumbnail';
+			function thumbnailClick(e){
+				// Am I using e correctly?
+				e.preventDefault();
+				// Run removeClass on every element
+				$(thumbnailSelector).removeClass(highlighted);
+				// Add the class to the currently clicked element
+				$(this).addClass(highlighted);
+			}
 
 			function scrollToBottom() {
 				$('html, body').animate( {scrollTop: $(document).height()}, 1000, "swing");
@@ -291,10 +300,8 @@
 			// Is this the best way to add behavior to an object?
 			$(function() {
     			$( "#imagePickerTitleBar" ).parent().draggable();
-  			});
 
-			// This controls the tabs in the image picker
-			$(function() {
+				// This controls the tabs in the image picker
 			    $('.tabs .tab-links a').on('click', function(e)  {
 			        e.preventDefault();
 			        var currentAttrValue = $(this).attr('href');
@@ -307,14 +314,7 @@
 			    });
 
 				// This is for the image picker to highlight the current selection.
-				// Am I using e correctly?
-				var $thumbs = $('.thumbnail').click(function(e) {
-					e.preventDefault();
-					// Run removeClass on every element
-					$thumbs.removeClass(highlighted);
-					// Add the class to the currently clicked element
-					$(this).addClass(highlighted);
-				});
+				$(document).on('click',thumbnailSelector,thumbnailClick);
 				
 				$('.thumbnail').dblclick(function(e) {
 					e.preventDefault();
