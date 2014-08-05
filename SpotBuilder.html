@@ -49,6 +49,9 @@
 					$(document).on('click', object, function() {
     					// Here is where we will generate the data file used by the After Effects Script.
     					// Insert text dump of the form fields, either save to file or send as email.
+
+    					$("#formId").submit();
+
 					});
 				}
 			}
@@ -214,10 +217,23 @@
 		<p class="note">[ 6/28/14 ] - <a href="mailto:nathan@pizar.net">Nathan D. B. Pizar</a> - <a href="http://www.gpmarketinginc.com">Gremillion & Pou</a></p>
 		<p>Use this tool to generate the basic structure of your commercial. Specify the content and options you'd like.</p>
 		
-		<form>
+		<form id="spotBuilderForm" action="formHandler.php" method="post">
 
+			<!-- Make this prettier, without using tables -->
 			<table class="mainOptions">
 				<tr>
+					<td colspan="3">
+						<b>Prepared by: </b>
+						<select name="submitter">
+							<option value="Not Specified">- Who are you? -</option>
+							<option id="john" value="john@gpmarketinginc.com">John Smith</option>
+							<option id="jane" value="jane@gpmarketinginc.com">Jane Smith</option>
+							<option id="example" value="example@gpmarketinginc.com">Anne Example</option>
+							<option id="example2" value="example2@gpmarketinginc.com">Another Example</option>
+						</select>
+					</td>
+				</tr>
+					</select>
 					<td><b>Spot Type: </b></td>
 					<td>
 						<input type="radio" id="splashLogoButton" name="spotType" value="splash" checked="checked">
@@ -280,6 +296,15 @@
 				 
 				    <div class="tab-content">
 				        <div id="tab1" class="tab active">
+
+				        	<!-- This will be a jQeury Template with the contents propogated via PHP. -->
+				        	<!-- To be more semanticly correct, should this use selectors instead? Example:
+
+				        		<select id="selectImage" class="image-picker">
+    								<option data-img-src='filename.jpg' value='filename.jpg'>Filename</option>
+    							</select>
+							-->
+
 							<ul>
 								<li class="thumbnail highlighted"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
 					            <li class="thumbnail"><img src="images/Above Ground Pools/AGP_1.jpg"></li>
