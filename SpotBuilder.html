@@ -8,205 +8,6 @@
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
-		
-
-		<script type="text/javascript">
-		
-			function addItem(itemType) {
-
-				// Why doesn't this line work?
-				var itemNumber = $(".spotItems li").size()+1;
-
-				if (itemType == "image") {
-					target = "#imageItemTemplate";
-				} else {
-					target = "#textItemTemplate";
-				}
-				var object = $(target).tmpl().appendTo(".spotItems");
-				object.show("drop", 600, function() { scrollToBottom(600); });
-			}
-
-			function deleteItem(object) {
-				if ( confirm('Delete this item?') ) {
-					target = $(object).closest('li');
-					$(target).slideUp(600, function() {$(target).remove();} );				    					
-				}
-			}
-			
-			function chooseImage() {
-				$('#imagePickerBox').show();
-
-				// This should return the currently active item in the picker.
-				// Current functionality does not destroy and recreate the box.
-				// This has the handy side effect of keeping your recent selection.
-
-				// The contents of the picker should use a template applied to
-				// an automatically generated list of the folder contents.
-			}
-
-			function buildSpot() {
-				if ( confirm('Ready to build this spot?') ) {
-					$(document).on('click', object, function() {
-    					// Here is where we will generate the data file used by the After Effects Script.
-    					// Insert text dump of the form fields, either save to file or send as email.
-					});
-				}
-			}
-
-			function closeImagePickerBox (invoking) {
-				$('.imagePickerBox').slideUp();
-				// Change this behavior depending on if the picker is canceled or accepted.
-				// If canceled, window should just go away. If an image is selected,
-				// the window can fade away while the selected image  animates to the
-				// position of the thumbnail preview of the invoking item.
-			}
-
-			function scrollToBottom() {
-				$('html, body').animate( {scrollTop: $(document).height()}, 1000, "swing");
-			}
-
-			// Is this the best way to add behavior to an object?
-			$(function() {
-    			$( "#imagePickerTitleBar" ).parent().draggable();
-  			});
-
-			// This controls the tabs in the image picker
-			$(document).ready(function() {
-			    $('.tabs .tab-links a').on('click', function(e)  {
-			        e.preventDefault();
-			        var currentAttrValue = $(this).attr('href');
-			 
-			        // Show current tab content and hide the rest
-			        $('.tabs ' + currentAttrValue).show().siblings().hide();
-			 
-			        // Set or remove the active style from the selected tab
-			        $(this).parent('li').addClass('active').siblings().removeClass('active');
-			    });
-			});
-
-			// This is for the image picker to highlight the current selection.
-			$(function() {
-				// Am I using e correctly?
-				var $thumbs = $('.thumbnail').click(function(e) {
-					e.preventDefault();
-					// Run removeClass on every element
-					$thumbs.removeClass(highlighted);
-					// Add the class to the currently clicked element
-					$(this).addClass(highlighted);
-				});
-				$('.thumbnail').dblclick(function(e) {
-					e.preventDefault();
-					closeImagePickerBox();
-				});
-  			});
-
-			$(window).on('beforeunload', function(e) {
-				// Is this better form than specifically calling for a dialog box?
-				return "This spot is not built yet. Your selections will be lost.";
-			});
-			
-			
-
-		</script>
-
-		<script type="text/javascript">
-	
-		</script>
-
-
-		<script id="textItemTemplate" type="text/x-jQuery-tmpl">
-			<li id="spotItem_${itemNumber}" class="textGroup">	
-				<div class="optionsGroup">
-					<h2>Item ${itemNumber}</h2>
-					<b>Text Super: </b><br>
-					<input type="text" name="itemText" size="24" value="Save BIG!"><br>
-					
-					<br><br>
-					<center><a id="deleteItemButton" class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
-				</div>
-
-				<div class="optionsGroup">
-					<b>Text Position: </b><br>
-					<input type="radio" name="textPlacement" value="top"> Top<br>
-					<input type="radio" name="textPlacement" value="center"> Center<br>
-					<input type="radio" name="textPlacement" value="bottom"> Bottom<br>
-
-					<br>
-
-					<b>Text Color: </b><br>
-					<input type="radio" name="textColor" value="yellow"> <span class="colorBox" style="background-color: yellow;"></span><br>
-					<input type="radio" name="textColor" value="white"> <span class="colorBox" style="background-color: white;"></span><br>
-					<input type="radio" name="textColor" value="red"> <span class="colorBox" style="background-color: red;"></span>
-
-				</div>
-
-				<div class="optionsGroup">
-					<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
-					<br>
-					<select name="inTransition">
-						<option value="none">Choose Transition In:</option>
-						<option value="fade">Fade In </option>
-						<option value="flyLeft">Fly from Left &gt;</option>
-						<option value="flyRight">Fly from Right &lt;</option>
-						<option value="flyTop">Fly from Top v</option>
-						<option value="flyTop">Fly from Bottom ^</option>
-						<option value="scaleUp">Grow Out</option>
-					</select>
-					<br><br>
-					<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
-					<br>
-					<select name="outTransition">
-						<option value="none">Choose Transition Out:</option>
-						<option value="fade">Fade Out</option>
-						<option value="flyLeft">Fly to Left &gt;</option>
-						<option value="flyRight">Fly to Right &lt;</option>
-						<option value="flyTop">Fly to Top v</option>
-						<option value="flyTop">Fly to Bottom ^</option>
-						<option value="scaleUp">Shrink Down</option>
-					</select>
-					<br><br>
-					<b>Bouncey Motion: </b><input type="checkbox" name="bounce" value="true" checked="checked">
-					<br>
-					<b>Glow: </b><input type="checkbox" name="glow"><br>
-					<b>Shadow: </b><input type="checkbox" name="shadow" checked="checked"><br>
-				</div>
-			</li>
-		</script>
-
-
-		<script id="imageItemTemplate" type="text/x-jQuery-tmpl">
-			<li id="spotItem_${itemNumber}" class="imageGroup">
-				
-				<div class="optionsGroup">
-					<h2>Item ${itemNumber}</h2>
-
-					<a class="greenButton" name="chooseImage" onClick="chooseImage()">Choose Image</a>
-					<br><br>
-					<center><a class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
-				</div>
-				<div class="optionsGroup">
-					<b>Image Preview: </b><br>
-					<div class="thumbnail"></div><br>
-				</div>
-
-				<div class="optionsGroup">
-					<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
-					<br><br>
-					<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
-					<br><br>
-					<select name="imageMotion">
-						<option value="none">Choose Image Motion:</option>
-						<option value="scaleUp">Slow Zoom In +</option>
-						<option value="scaleUp">Slow Zoom Out -</option>
-						<option value="panLeft">Pan Left &gt;</option>
-						<option value="panRight">Pan Right &lt;</option>
-						<option value="panDown">Pan Down v</option>
-						<option value="panUp">Pan Up ^</option>
-					</select>
-				</div>
-			</li>
-		</script>
-
 	</head>
 
 	<body>
@@ -337,6 +138,286 @@
 				<center><a href="#" id="useImage" class="greenButton" onclick="closeImagePickerBox()">Use This Image</a><a href="#" id="cancelButton" class="redButton" onclick="closeImagePickerBox()">Cancel</a></center><br>
 				
 			</div>
+			
 
+	<script id="textItemTemplate" type="text/x-jQuery-tmpl">
+		<li id="spotItem_${itemNumber}" class="textGroup">	
+			<div class="optionsGroup">
+				<h2>Item ${itemNumber}</h2>
+				<b>Text Super: </b><br>
+				<input type="text" name="itemText" size="24" value="Save BIG!"><br>
+				
+				<br><br>
+				<center><a id="deleteItemButton" class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
+			</div>
+
+			<div class="optionsGroup">
+				<b>Text Position: </b><br>
+				<input type="radio" name="textPlacement" value="top"> Top<br>
+				<input type="radio" name="textPlacement" value="center"> Center<br>
+				<input type="radio" name="textPlacement" value="bottom"> Bottom<br>
+
+				<br>
+
+				<b>Text Color: </b><br>
+				<input type="radio" name="textColor" value="yellow"> <span class="colorBox" style="background-color: yellow;"></span><br>
+				<input type="radio" name="textColor" value="white"> <span class="colorBox" style="background-color: white;"></span><br>
+				<input type="radio" name="textColor" value="red"> <span class="colorBox" style="background-color: red;"></span>
+
+			</div>
+
+			<div class="optionsGroup">
+				<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
+				<br>
+				<select name="inTransition">
+					<option value="none">Choose Transition In:</option>
+					<option value="fade">Fade In </option>
+					<option value="flyLeft">Fly from Left &gt;</option>
+					<option value="flyRight">Fly from Right &lt;</option>
+					<option value="flyTop">Fly from Top v</option>
+					<option value="flyTop">Fly from Bottom ^</option>
+					<option value="scaleUp">Grow Out</option>
+				</select>
+				<br><br>
+				<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
+				<br>
+				<select name="outTransition">
+					<option value="none">Choose Transition Out:</option>
+					<option value="fade">Fade Out</option>
+					<option value="flyLeft">Fly to Left &gt;</option>
+					<option value="flyRight">Fly to Right &lt;</option>
+					<option value="flyTop">Fly to Top v</option>
+					<option value="flyTop">Fly to Bottom ^</option>
+					<option value="scaleUp">Shrink Down</option>
+				</select>
+				<br><br>
+				<b>Bouncey Motion: </b><input type="checkbox" name="bounce" value="true" checked="checked">
+				<br>
+				<b>Glow: </b><input type="checkbox" name="glow"><br>
+				<b>Shadow: </b><input type="checkbox" name="shadow" checked="checked"><br>
+			</div>
+		</li>
+	</script>
+
+
+	<script id="imageItemTemplate" type="text/x-jQuery-tmpl">
+		<li id="spotItem_${itemNumber}" class="imageGroup">
+			
+			<div class="optionsGroup">
+				<h2>Item ${itemNumber}</h2>
+
+				<a class="greenButton" name="chooseImage" onClick="chooseImage()">Choose Image</a>
+				<br><br>
+				<center><a class="redButton" onclick="deleteItem(this)">X Delete Item</a></center>
+			</div>
+			<div class="optionsGroup">
+				<b>Image Preview: </b><br>
+				<div class="thumbnail"></div><br>
+			</div>
+
+			<div class="optionsGroup">
+				<b>Start Time: </b><input type="text" name="startTime" size="8" value="00">
+				<br><br>
+				<b>End Time: </b><input type="text" name="endTime" size="8" value="00">
+				<br><br>
+				<select name="imageMotion">
+					<option value="none">Choose Image Motion:</option>
+					<option value="scaleUp">Slow Zoom In +</option>
+					<option value="scaleUp">Slow Zoom Out -</option>
+					<option value="panLeft">Pan Left &gt;</option>
+					<option value="panRight">Pan Right &lt;</option>
+					<option value="panDown">Pan Down v</option>
+					<option value="panUp">Pan Up ^</option>
+				</select>
+			</div>
+		</li>
+	</script>
+	
+	<script type="text/javascript">
+			var sliderSlow = 600,
+			    sliderReallySlow = 1000,
+			    thumbnailSelector = '.thumbnail',
+			    imagePickerTabsSelector = '.tabs .tab-links a',
+			    useImageTemplate = 'imageItem',
+			    useImageTemplateSelector = '#imageItemTemplate',
+			    useTextTemplate = 'textItem',
+			    useTextTemplateSelector = '#textItemTemplate',
+			    imagePickerBox = '#imagePickerBox',
+				highlightedClassSelector = 'highlighted';
+			
+			function precacheTemplates(){
+				$.template(useTextTemplate,$(useTextTemplateSelector));
+				$.template(useImageTemplate,$(useImageTemplateSelector));
+			}
+			
+			/// <summary>
+			/// This method is used to add items into the spotItems list using one of the two templates
+			/// </summary>
+			/// <param name="useItemTemplate">Pass in one of the items like useTextTemplate or useImageTemplate to use the precached templates</param>
+			function addItem(useItemTemplate) {
+				// Why doesn't this line work? -- size was deprecated, for starters
+				var itemNumber = ($(".spotItems li").length)+1;
+				
+				// what are you trying to capture here?
+				var object = $.tmpl(useItemTemplate).appendTo(".spotItems");
+				
+				//reversed the options on show, removed the function wrapper since the declaration doesn't take any args
+				object.show(sliderSlow, "drop", scrollToBottom);
+				
+				//set the page status to dirty so we prompt to save if they leave.
+				dirtyData();
+			}
+
+			/// <summary>
+			/// Delete the item, after displaying a confirmation dialog to ensure we delete only when we want to
+			/// </summary>
+			/// <param name="object">The object clicked on within the parent intended to be deleted</param>
+			function deleteItem(object) {
+				if ( confirm('Delete this item?') ) {
+					var target = $(object).closest('li'); //get the parent object that we're going to remove.
+					target.slideUp(sliderSlow, target.remove);
+				}
+			}
+
+			/// <summary>
+			/// This should return the currently active item in the picker.
+			/// Current functionality does not destroy and recreate the box.
+			/// This has the handy side effect of keeping your recent selection.
+			///
+			/// The contents of the picker should use a template applied to
+			/// an automatically generated list of the folder contents.
+			/// </summary>
+			function chooseImage() {
+				$(imagePickerBox).show();
+			}
+
+			/// <summary>
+			/// This is where we build the final object and then the form is "clean" again.
+			/// </summary>
+			/// <param name=""></param>
+			function buildSpot() {
+				if ( confirm('Ready to build this spot?') ) {
+					// what is "object" below. It's not defined anywhere else.
+					$(document).on('click', object, function() {
+    					// Here is where we will generate the data file used by the After Effects Script.
+    					// Insert text dump of the form fields, either save to file or send as email.
+					});
+					
+					// set the page status to clean so we don't prompt to save if we leave.
+					cleanData();
+				}
+			}
+
+			/// <summary>
+			/// Change this behavior depending on if the picker is canceled or accepted.
+			/// If canceled, window should just go away. If an image is selected,
+			/// the window can fade away while the selected image  animates to the
+			/// position of the thumbnail preview of the invoking item.
+			/// </summary>
+			/// <param name="invoking">the object that invoked this method</param>
+			function closeImagePickerBox (invoking) {
+				$(invoking).slideUp();
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
+			function thumbnailClick(e){
+				e = e || window.event; e.preventDefault();
+				
+				// Run removeClass on every element
+				$(thumbnailSelector).removeClass(highlightedClassSelector);
+				
+				// Add the class to the currently clicked element
+				$(this).addClass(highlightedClassSelector);
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
+			function thumbnailDblClick(e){
+				e = e || window.event; e.preventDefault();
+				
+				closeImagePickerBox();
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
+			function imagePickerTabsClick(e){
+				e = e || window.event; e.preventDefault();
+				
+				var currentAttrValue = $(this).attr('href');
+		 
+				// Show current tab content and hide the rest
+				$('.tabs ' + currentAttrValue).show().siblings().hide();
+		 
+				// Set or remove the active style from the selected tab
+				$(this).parent('li').addClass('active').siblings().removeClass('active');
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name=""></param>
+			function scrollToBottom() {
+				$('html, body').animate( {scrollTop: $(document).height()}, sliderReallySlow, "swing");
+			}
+			
+			/// <summary>
+			/// Generate the message to display "are you sure you want to leave now"
+			/// </summary>
+			/// <param name="e">Event object</param>
+			function confirmOnPageExit(e) {
+				// If we haven't been passed some event object get the window.event
+				e = e || window.event;
+
+				var message = 'This spot is not built yet. Your selections will be lost.';
+
+				// For IE6-8 and Firefox prior to version 4
+				if (e) e.returnValue = message;
+
+				// For Chrome, Safari, IE8+ and Opera 12+
+				return message;
+			};
+
+			/// <summary>
+			/// Handle window unloading when dirty to ensure we have offered them the option to save their spot
+			/// </summary>
+			function dirtyData(){
+				// Turn it on - assign the function that returns the string
+				window.onbeforeunload = confirmOnPageExit;
+			}
+
+			/// <summary>
+			/// don't show them the window message if they haven't done anything to dirty the page
+			/// </summary>
+			function cleanData(){
+				// Turn it off - remove the function entirely
+				window.onbeforeunload = null;
+			}
+
+			/// <summary>
+			/// page start routine. This should be at the end.
+			/// </summary>
+			$(function() {
+				precacheTemplates();
+				// Is this the best way to add behavior to an object?
+				// cb - this is fine
+    			$( "#imagePickerTitleBar" ).parent().draggable();
+
+				// by using the $(document).on( syntax we can add elements dynamically and have them also be affected by the click event like we intend
+			    $(document).on('click', imagePickerTabsSelector, imagePickerTabsClick)
+				           .on('click', thumbnailSelector, thumbnailClick)
+				           .on('dblclick', thumbnailSelector, thumbnailDblClick);
+  			});
+		</script>
+
+		<script type="text/javascript">
+	
+		</script>
 	</body>
 </html>
